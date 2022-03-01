@@ -86,11 +86,11 @@ def yolo_infer(images_list, result_path, model_path, context_norm, body_norm, in
         write_text_vad = list()
         for continuous in pred_cont:
           write_text_vad.append(str('%.1f' %(continuous)))
-        write_text_vad = 'vad ' + ' '.join(write_text_vad) 
+        write_text_vad = f'{pred_bbox.tolist()} ' + 'vad ' + ' '.join(write_text_vad)
         image_context = cv2.rectangle(image_context, (pred_bbox[0], pred_bbox[1]),(pred_bbox[2] , pred_bbox[3]), (255, 0, 0), 3)
-        cv2.putText(image_context, write_text_vad, (pred_bbox[0], pred_bbox[1] - 5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
+        cv2.putText(image_context, write_text_vad, (pred_bbox[0], pred_bbox[1] - 5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
         for i, emotion in enumerate(pred_cat):
-          cv2.putText(image_context, emotion, (pred_bbox[0], pred_bbox[1] + (i+1)*12), cv2.FONT_HERSHEY_PLAIN, 1, (255, 255, 255), 1)
+          cv2.putText(image_context, emotion, (pred_bbox[0], pred_bbox[1] + (i+1)*12), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
     except Exception as e:
       print ('Exception for image ',image_context_path)
       print (e)
