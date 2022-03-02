@@ -54,7 +54,7 @@ def infer(context_norm, body_norm, ind2cat, ind2vad, device, thresholds, models,
   :param image_body: Numpy array of the body image. 
   :param bbox: List to specify the bounding box to generate the body image. bbox = [x1, y1, x2, y2].
   :param to_print: Variable to display inference results.
-  :return: Categorical Emotions list and continuous emotion dimensions numpy array.
+  :return: Categorical Emotions dict {'Emotion': float(pred_value), ...} and continuous emotion dimensions numpy array.
   '''
   image_context, image_body = process_images(context_norm, body_norm, image_context_path=image_context_path, image_context=image_context, image_body=image_body, bbox=bbox)
 
@@ -72,10 +72,10 @@ def infer(context_norm, body_norm, ind2cat, ind2vad, device, thresholds, models,
 
     bool_cat_pred = torch.gt(pred_cat, thresholds)
   
-  cat_emotions = list()
+  cat_emotions = dict()
   for i in range(len(bool_cat_pred)):
     if bool_cat_pred[i] == True:
-      cat_emotions.append(ind2cat[i])
+      cat_emotions[ind2cat[i]] = float(pred_cat[i])
 
   if to_print == True:
     print ('\n Image predictions')

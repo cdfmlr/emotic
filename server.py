@@ -9,8 +9,8 @@ import os
 import torch
 from torchvision import transforms
 
-from emopic.emotic.yolo_inference import get_bbox
-from emopic.emotic.yolo_utils import prepare_yolo
+from yolo_inference import get_bbox
+from yolo_utils import prepare_yolo
 from emotic import Emotic
 
 from inference import inference_emotic, infer
@@ -77,8 +77,8 @@ def yolo_emotic_infer(image_file, verbose=False):
     :param image_file: image file to do inference: a path str or IO
     :param verbose: print the result
     :return: infer result: a list of bbox of a person in the image,
-             the categorical Emotions list and continuous emotion dimensions.
-             [{'bbox': [x1, y1, x2, y2], 'cat': ['Sadness', ...], 'cont': [5.8, 7.1, 2.1]}, ...]
+             the categorical Emotions dict and continuous emotion dimensions.
+             [{'bbox': [x1, y1, x2, y2], 'cat': {"Anger": 0.44, ...}, 'cont': [5.8, 7.1, 2.1]}, ...]
     """
 
     result = []

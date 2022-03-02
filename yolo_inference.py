@@ -90,6 +90,7 @@ def yolo_infer(images_list, result_path, model_path, context_norm, body_norm, in
         image_context = cv2.rectangle(image_context, (pred_bbox[0], pred_bbox[1]),(pred_bbox[2] , pred_bbox[3]), (255, 0, 0), 3)
         cv2.putText(image_context, write_text_vad, (pred_bbox[0], pred_bbox[1] - 5), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
         for i, emotion in enumerate(pred_cat):
+          emotion = f'{emotion}'
           cv2.putText(image_context, emotion, (pred_bbox[0], pred_bbox[1] + (i+1)*12), cv2.FONT_HERSHEY_PLAIN, 1, (255, 0, 0), 1)
     except Exception as e:
       print ('Exception for image ',image_context_path)
@@ -145,6 +146,7 @@ def yolo_video(video_file, result_path, model_path, context_norm, body_norm, ind
         image_context = cv2.rectangle(image_context, (pred_bbox[0], pred_bbox[1]),(pred_bbox[2] , pred_bbox[3]), (255, 0, 0), 3)
         cv2.putText(image_context, write_text_vad, (pred_bbox[0], pred_bbox[1] - 5), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
         for i, emotion in enumerate(pred_cat):
+          emotion = f'{emotion}'
           cv2.putText(image_context, emotion, (pred_bbox[0], pred_bbox[1] + (i+1)*12), cv2.FONT_HERSHEY_PLAIN, 1, (0, 0, 255), 2)
     except Exception:
       pass
