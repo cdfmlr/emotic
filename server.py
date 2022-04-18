@@ -1,3 +1,4 @@
+import logging
 import traceback
 
 from aiohttp import web
@@ -103,11 +104,14 @@ def yolo_emotic_infer(image_file, verbose=False):
                 'cont': pred_cont.tolist()})
         if verbose:
             print(f'inference: {image_file=}, {result=}')
+
+        return result
     except Exception as e:
         print('Exception for image ', image_file, ':', e)
-        traceback.print_exc()
-    finally:
-        return result
+        # traceback.print_exc()
+        raise e
+    # finally:
+    #     return result
 
 
 # region webserver
@@ -121,11 +125,22 @@ async def handle(request):
     data = await request.post()
     img = data['img'].file
 
-    result = yolo_emotic_infer(img)
-    return web.json_response(result)
+    try:
+        result = yolo_emotic_infer(img)
+        # print(f'{result=}')
+        return web.json_response(result)
+    except cv2.error:  # (-215:Assertion failed) !_src.empty() in function 'cvtColor'
+        raise web.HTTPBadRequest(text='Not a image')
+    except TypeError:  # 'NoneType' object is not subscriptable
+        raise web.HTTPBadRequest(text='No human body detected in the image')
+    except Exception as e:
+        print('unexpected error:', e)
+        traceback.print_exc()
+        raise web.HTTPInternalServerError()
 
 
 app = web.Application()
+logging.basicConfig(level=logging.INFO)
 app.add_routes([web.post('/infer', handle)])
 
 # endregion webserver
